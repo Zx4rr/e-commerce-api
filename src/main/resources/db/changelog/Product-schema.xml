@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+
+    <changeSet id="1234" author="onur">
+
+        <createTable tableName="category">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"
+                             unique="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
+        </createTable>
+
+        <createTable tableName="product">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"
+                             unique="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="explanation" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="user">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="role">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"
+                             unique="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20241904-34" author="onur">
+        <addForeignKeyConstraint
+                baseTableName="product"
+                baseColumnNames="category_id"
+                constraintName="fk_product_category"
+                referencedTableName="category"
+                referencedColumnNames="id"
+        />
+    </changeSet>
+    <changeSet id="20241904-36" author="onur">
+        <addForeignKeyConstraint
+                baseTableName="user"
+                baseColumnNames="role_id"
+                constraintName="fk_role_user"
+                referencedTableName="role"
+                referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

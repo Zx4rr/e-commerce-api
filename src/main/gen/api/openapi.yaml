@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: you@your-company.com
+  description: This is a simple API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Simple Inventory API
+  version: 1.0.0
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/CINARSENTURK3456/shop-api/1.0.0
+tags:
+- description: Secured Admin-only calls
+  name: admins
+- description: Operations available to regular developers
+  name: developers
+paths:
+  /inventory:
+    get:
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      operationId: searchInventory
+      parameters:
+      - description: pass an optional search string for looking up inventory
+        explode: true
+        in: query
+        name: searchString
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: number of records to skip for pagination
+        explode: true
+        in: query
+        name: skip
+        required: false
+        schema:
+          format: int32
+          minimum: 0
+          type: integer
+        style: form
+      - description: maximum number of records to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          maximum: 50
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
+                type: array
+          description: search results matching criteria
+        "400":
+          description: bad input parameter
+      summary: searches inventory
+      tags:
+      - developers
+      x-accepts: application/json
+    post:
+      description: Adds an item to the system
+      operationId: addInventory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryItem'
+        description: Inventory item to add
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: an existing item already exists
+      summary: adds an inventory item
+      tags:
+      - admins
+      x-content-type: application/json
+      x-accepts: application/json
+components:
+  schemas:
+    InventoryItem:
+      example:
+        releaseDate: 2016-08-29T09:12:33.001Z
+        name: Widget Adapter
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        manufacturer:
+          phone: 408-867-5309
+          name: ACME Corporation
+          homePage: https://www.acme-corp.com
+      properties:
+        id:
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          format: uuid
+          type: string
+        name:
+          example: Widget Adapter
+          type: string
+        releaseDate:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+        manufacturer:
+          $ref: '#/components/schemas/Manufacturer'
+      required:
+      - id
+      - manufacturer
+      - name
+      - releaseDate
+      type: object
+    Manufacturer:
+      example:
+        phone: 408-867-5309
+        name: ACME Corporation
+        homePage: https://www.acme-corp.com
+      properties:
+        name:
+          example: ACME Corporation
+          type: string
+        homePage:
+          example: https://www.acme-corp.com
+          format: url
+          type: string
+        phone:
+          example: 408-867-5309
+          type: string
+      required:
+      - name
+      type: object
+
